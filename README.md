@@ -1,2 +1,11 @@
-# Roblox-Anti-AFK
-WoahItsJeebus' first C++/AHK script
+> [!IMPORTANT]
+> This script requires [AutoHotKey v2](https://autohotkey.com/download/ahk-v2.exe)
+
+> [!NOTE]
+> This script is the first *real* project I've put together since learning a bit of C++. As a result, a lot of what you'll find may be unoptimized or sloppy.
+
+> [!CAUTION]
+> Bugs may occur when searching for the Windows Store version of Roblox
+
+# **Download**
+[![GitHub Release](https://img.shields.io/github/v/release/WoahItsJeebus/Roblox-Anti-AFK?sort=semver&display_name=release&style=for-the-badge&label=Latest)](https://github.com/user-attachments/files/17611155/Roblox.Anti-AFK_1.0.0.zip)
