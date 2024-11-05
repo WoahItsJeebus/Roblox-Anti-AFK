@@ -8,4 +8,5 @@
 > Bugs may occur when searching for the Windows Store version of Roblox
 
 # <p align=center> **Download** </p>
-[![GitHub Release](https://img.shields.io/github/v/release/WoahItsJeebus/Roblox-Anti-AFK?sort=semver&display_name=release&style=for-the-badge&label=Latest)](https://github.com/WoahItsJeebus/Roblox-Anti-AFK/releases/download/1.0.1/Roblox.Anti-AFK_1.0.1.zip)
+(https://github.com/WoahItsJeebus/Roblox-Anti-AFK/releases/download/1.0.1/Roblox.Anti-AFK_1.0.1.zip)
+![GitHub Release](https://img.shields.io/github/v/release/WoahItsJeebus/Roblox-Anti-AFK?sort=semver&display_name=release&style=for-the-badge&label=Latest)
