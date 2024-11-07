@@ -22,3 +22,7 @@
 > [!CAUTION]
 > Bugs may occur when searching for the Windows Store version of Roblox.
 > As this is my very first real project in this language, bugs can occur at any point. Relaunching the script or using an earlier build may circumvent these bugs.
+
+<p align="center">
+  <img width="518" height="511" src="https://github.com/user-attachments/assets/f8aa94d9-f319-4292-a066-791cd241ff6b">
+</p>
