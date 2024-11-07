@@ -9,7 +9,7 @@
 - ### Progress bar & time tracking
   - See how long until the next auto-click!
 > [!NOTE]
-> This script is the first *real* project I've put together since learning a bit of AHK. As a result, a lot of what you'll find may be unoptimized or sloppy.
+> This script is the first *real* project I've put together since learning a small bit of AHK in my offtime. As a result, a lot of what you'll find may be unoptimized or sloppy.
 
 # <p align=center><ins>**Download**</ins></p>
 > [!IMPORTANT]
