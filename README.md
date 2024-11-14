@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> This script **<ins>requires</ins>** [AutoHotKey v2](https://autohotkey.com/download/ahk-v2.exe)
+
 # <p align=center><ins>**Features**</ins></p>
 - ### Anti-AFK
   - This script will look for an active Roblox process, focus it, clicks the center of the window, and returns to the previously active window (if any), repeats every 15 minutes
@@ -12,8 +15,6 @@
 > This script is the first *real* project I've put together since learning a small bit of AHK in my offtime. As a result, a lot of what you'll find may be unoptimized or sloppy.
 
 # <p align=center><ins>**Download**</ins></p>
-> [!IMPORTANT]
-> This script **<ins>requires</ins>** [AutoHotKey v2](https://autohotkey.com/download/ahk-v2.exe)
 <div align="center">
   
 [![GitHub Release](https://img.shields.io/github/v/release/WoahItsJeebus/Roblox-Anti-AFK?sort=semver&display_name=release&style=for-the-badge&label=Latest)](https://github.com/WoahItsJeebus/Roblox-Anti-AFK/releases/latest)
