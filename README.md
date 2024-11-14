@@ -16,7 +16,7 @@
 > This script **<ins>requires</ins>** [AutoHotKey v2](https://autohotkey.com/download/ahk-v2.exe)
 <div align="center">
   
-[![GitHub Release](https://img.shields.io/github/v/release/WoahItsJeebus/Roblox-Anti-AFK?sort=semver&display_name=release&style=for-the-badge&label=Latest)](https://github.com/WoahItsJeebus/Roblox-Anti-AFK/releases/download/1.0.0/Roblox.Anti-AFK_1.0.0.zip)
+[![GitHub Release](https://img.shields.io/github/v/release/WoahItsJeebus/Roblox-Anti-AFK?sort=semver&display_name=release&style=for-the-badge&label=Latest)](https://github.com/WoahItsJeebus/Roblox-Anti-AFK/releases/latest)
 </div>
 
 > [!CAUTION]
