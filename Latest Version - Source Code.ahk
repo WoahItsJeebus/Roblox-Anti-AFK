@@ -18,6 +18,7 @@ global UI_Height := "300"
 global Min_UI_Width := "500"
 global Min_UI_Height := "300"
 
+; Core UI Buttons
 global EditButton := ""
 global ExitButton := ""
 global CoreToggleButton := ""
@@ -37,6 +38,16 @@ global MainUI_Warning := ""
 global EditorButton := ""
 global ScriptDirButton := ""
 
+; Extras Menu
+global ShowingExtrasUI := false 
+
+global OpenExtrasLabel := ""
+global CloseExtrasButton := ""
+global GitHubLink := ""
+global DonationLink := ""
+global DiscordLink := ""
+
+; Light/Dark mode colors
 global updateTheme := true
 
 global blnLightMode := RegRead("HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize", "AppsUseLightTheme")
@@ -58,7 +69,7 @@ createWarningUI(*)
 {
 	; Global Variables
 	global blnLightMode := RegRead("HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize", "AppsUseLightTheme")
-	global MainUI_Warning := Gui("")
+	global MainUI_Warning := Gui("+AlwaysOnTop")
 	MainUI_Warning.BackColor := intWindowColor
 
 	; Local Variables
@@ -182,10 +193,11 @@ CreateGui(*)
 	global WaitTimerLabel
 	global ElapsedTimeLabel
 	global MinutesToWait
-	global VersionHyperlink
 	global ResetCooldownButton
-	global CreditsLink
 
+	global CreditsLink
+	global OpenExtrasLabel
+	
 	; Colors
 	global blnLightMode := RegRead("HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize", "AppsUseLightTheme")
 	global intWindowColor := (!blnLightMode and updateTheme) and "404040" or "EEEEEE"
@@ -293,12 +305,12 @@ CreateGui(*)
 	ElapsedTimeLabel.Opt("Background" intWindowColor . " c" ControlTextColor)
 	WaitProgress.Opt("Background" intProgressBarColor)
 
+	
 	; Reset Cooldown
 	ResetCooldownButton := MainUI.Add("Button", "h30 w" UI_Margin_Width, "Reset")
 	ResetCooldownButton.OnEvent("Click", ResetCooldown)
 	ResetCooldownButton.SetFont("s12 w500", "Consolas")
 	ResetCooldownButton.Opt("Background" intWindowColor)
-
 	; Credits
 	CreditsLink := MainUI.Add("Link", "c" linkColor . " Section Left w" UI_Margin_Width/2, 'Created by <a href="https://www.roblox.com/users/3817884/profile">@WoahItsJeebus</a>')
 	CreditsLink.SetFont("s12 w700", "Ink Free")
@@ -306,65 +318,20 @@ CreateGui(*)
 	LinkUseDefaultColor(CreditsLink)
 
 	; Version
-	VersionHyperlink := MainUI.Add("Link", "x+m Section Right w" UI_Margin_Width/2, '<a href="https://github.com/WoahItsJeebus/Roblox-Anti-AFK">GitHub</a>')
-	VersionHyperlink.SetFont("s12 w700", "Ink Free")
-	VersionHyperlink.Opt("c" linkColor)
-	LinkUseDefaultColor(VersionHyperlink)
+	OpenExtrasLabel := MainUI.Add("Text", "x+m Section Right 0x300 0xC00 w" UI_Margin_Width/2, "Extras")
+	OpenExtrasLabel.SetFont("s12 w700", "Ink Free")
+	OpenExtrasLabel.Opt("c" linkColor)
+	OpenExtrasLabel.OnEvent("Click", ToggleExtrasUI)
+
+	; LinkUseDefaultColor(VersionHyperlink)
 	
 	; Update ElapsedTimeLabel with the formatted time and total wait time in minutes
     UpdateTimerLabel()
 	
 	
-	
-	
-	
 	; ###########################################################
 	; #################### Button Formatting ####################
 	; ###########################################################
-	ControlResize(TargetButton, optionalX, objInGroup) {
-		local UI_Margin_Width := UI_Width-MainUI.MarginX
-		
-		; Calculate initial control width based on GUI width and margins
-		X := 0, Y := 0, UI_Width := 0, UI_Height := 0
-		
-		; Get the client area dimensions
-		MainUI.GetPos(&X, &Y, &UI_Width, &UI_Height)
-		NewButtonWidth := (UI_Width - (2 * UI_Margin_Width))
-		
-		; Prevent negative button widths
-		if (NewButtonWidth < UI_Margin_Width/(objInGroup or 1)) {
-			NewButtonWidth := UI_Margin_Width/(objInGroup or 1)  ; Set to 0 if the width is negative
-		}
-		
-		OldButtonPosX := 0, OldY := 0, OldWidth := 0, OldHeight := 0
-		TargetButton.GetPos(&OldButtonPosX, &OldY, &OldWidth, &OldHeight)
-		
-		; Move
-		TargetButton.Move(optionalX > 0 and 0 + (UI_Width / optionalX) or 0 + MainUI.MarginX, , )
-	}
-
-	ControlMove(TargetButton, optionalX, objInGroup) {
-		local UI_Margin_Width := UI_Width-MainUI.MarginX
-		
-		; Calculate initial control width based on GUI width and margins
-		X := 0, Y := 0, UI_Width := 0, UI_Height := 0
-		
-		; Get the client area dimensions
-		MainUI.GetPos(&X, &Y, &UI_Width, &UI_Height)
-		NewButtonWidth := (UI_Width - (2 * UI_Margin_Width))
-		
-		; Prevent negative button widths
-		if (NewButtonWidth < UI_Margin_Width/(objInGroup or 1)) {
-			NewButtonWidth := UI_Margin_Width/(objInGroup or 1)  ; Set to 0 if the width is negative
-		}
-		
-		OldButtonPosX := 0, OldY := 0, OldWidth := 0, OldHeight := 0
-		TargetButton.GetPos(&OldButtonPosX, &OldY, &OldWidth, &OldHeight)
-		
-		; Resize
-		TargetButton.Move(optionalX > 0 and 0 + (UI_Width / optionalX) or 0 + MainUI.MarginX, , optionalX > 0 and 0 + (UI_Width / optionalX) or 0 + MainUI.MarginX)
-	}
-	
 	
 	DoResize(*) {
 		ControlResize(WaitTimerLabel, 0, 1)
@@ -375,7 +342,7 @@ CreateGui(*)
 		ControlResize(EditCooldownButton, 0, 1)
 		
 		ControlResize(ResetCooldownButton, 0, 1)
-		ControlMove(ResetCooldownButton, 3.05, 1)
+		MoveControl(ResetCooldownButton, 3.05, 1)
 		
 		ControlResize(CoreToggleButton, 0, 2)
 		ControlResize(SoundToggleButton, 2.05, 2)
@@ -388,7 +355,8 @@ CreateGui(*)
 		ControlResize(ReloadButton, 3, 3)
 		
 		ControlResize(CreditsLink, 0, 2)
-		ControlResize(VersionHyperlink, 2, 2)
+		ControlResize(OpenExtrasLabel, 2, 2)
+		; ControlResize(VersionHyperlink, 2, 2)
 	}
 	
 	; Define the resize event handler as a separate function
@@ -402,18 +370,82 @@ CreateGui(*)
 	
 	; ####################################
 	
-	; Indicate loop began
-	if playSounds
-	{
-		Loop 2
-		SoundBeep(300, 200)
-	}
+	CreateExtrasGUI()
 
+	; Indicate UI was fully created
+	if playSounds
+		Loop 2
+			SoundBeep(300, 200)
+	
+	; Listen for theme updates
 	loop
 	{
 		RedrawUserInterface()
 		Sleep(100)
 	}
+}
+
+CreateExtrasGUI(*)
+{
+	
+	global UI_Width
+	global UI_Height
+	global DiscordLink
+	global VersionHyperlink
+	global CloseExtrasButton
+	
+	; Create new UI
+	global ExtrasUI := Gui("-SysMenu") ; Create UI window
+	ExtrasUI.BackColor := intWindowColor
+	ExtrasUI.OnEvent("Close", ToggleExtrasUI)
+	
+	ExtrasUI.Title := "Extras"
+	ExtrasUI.SetFont("s14 w500", "Courier New")
+	ExtrasUI.Move(, , 500, 300)
+	
+	local UI_Margin_Width := UI_Width-ExtrasUI.MarginX
+	local UI_Margin_Height := UI_Height-ExtrasUI.MarginY
+	
+	; Discord
+	DiscordLink := ExtrasUI.Add("Link", "Center c" linkColor . " h40 w90", '<a href="https://discord.gg/w8QdNsYmbr">Discord</a>')
+	DiscordLink.SetFont("s20 w700", "Ink Free")
+	DiscordLink.Opt("c" linkColor)
+	LinkUseDefaultColor(DiscordLink)
+	
+	; Version
+	VersionHyperlink := ExtrasUI.Add("Link", "x+m Center h40 w90", '<a href="https://github.com/WoahItsJeebus/Roblox-Anti-AFK">GitHub</a>')
+	VersionHyperlink.SetFont("s20 w700", "Ink Free")
+	VersionHyperlink.Opt("c" linkColor)
+	LinkUseDefaultColor(VersionHyperlink)
+
+	CloseExtrasButton := ExtrasUI.Add("Button", "h30 w" UI_Margin_Width, "Close")
+	CloseExtrasButton.OnEvent("Click", ToggleExtrasUI)
+	CloseExtrasButton.SetFont("s12 w500", "Consolas")
+	CloseExtrasButton.Opt("Background" intControlColor)
+
+	ControlResize(DiscordLink, 0, 2)
+	ControlResize(VersionHyperlink, 2.05, 2)
+	ControlResize(CloseExtrasButton, 0, 1)
+
+	ControlResize(CloseExtrasButton, 0, 1)
+	MoveControl(CloseExtrasButton, 4.25, 1)
+	; ControlResize(DiscordLink, 0, 2)
+}
+
+ToggleExtrasUI(*)
+{
+	global ShowingExtrasUI
+	global ExtrasUI
+
+	if not ExtrasUI
+		return
+
+	if not ShowingExtrasUI
+		ExtrasUI.Show("Center AutoSize")
+	else
+		ExtrasUI.Hide()
+	
+	ShowingExtrasUI := not ShowingExtrasUI
 }
 
 RedrawUserInterface(*)
@@ -464,7 +496,7 @@ RedrawUserInterface(*)
 		ResetCooldownButton.Opt("Background" intWindowColor)
 		WaitTimerLabel.Opt("Background" intWindowColor . " c" ControlTextColor)
 		ElapsedTimeLabel.Opt("Background" intWindowColor . " c" ControlTextColor)
-		
+
 		EditButton.Redraw()
 		ExitButton.Redraw()
 		CoreToggleButton.Redraw()
@@ -476,8 +508,9 @@ RedrawUserInterface(*)
 		WaitTimerLabel.Redraw()
 		ElapsedTimeLabel.Redraw()
 		ResetCooldownButton.Redraw()
-		VersionHyperlink.Opt("c" linkColor)
 		CreditsLink.Opt("c" linkColor)
+
+		; VersionHyperlink.Opt("c" linkColor)
 	}
 }
 
@@ -594,6 +627,7 @@ ToggleCore(optionalControl?, forceState?, *)
 	isActive := false
 	ResetCooldown()
 	
+	SetTimer(RunCore, 0)
 	return Roblox_Not_Found()
 }
 
@@ -708,7 +742,63 @@ RunCore(*)
     WaitTimerLabel.Text := Round(WaitProgress.Value, 0) "%"
 }
 
-; Sounds
+; ###########################################################
+; #################### Button Formatting ####################
+; ###########################################################
+
+ControlResize := (Target, position, size) => ResizeMethod(Target, position, size)
+ResizeMethod(TargetButton, optionalX, objInGroup) {
+	local parentUI := TargetButton.Gui
+	
+	; Calculate initial control width based on GUI width and margins
+	local X := 0, Y := 0, UI_Width := 0, UI_Height := 0
+	local UI_Margin_Width := UI_Width-parentUI.MarginX
+	
+	; Get the client area dimensions
+	parentUI.GetPos(&X, &Y, &UI_Width, &UI_Height)
+	NewButtonWidth := (UI_Width - (2 * UI_Margin_Width))
+	
+	; Prevent negative button widths
+	if (NewButtonWidth < UI_Margin_Width/(objInGroup or 1)) {
+		NewButtonWidth := UI_Margin_Width/(objInGroup or 1)  ; Set to 0 if the width is negative
+	}
+	
+	OldButtonPosX := 0, OldY := 0, OldWidth := 0, OldHeight := 0
+	TargetButton.GetPos(&OldButtonPosX, &OldY, &OldWidth, &OldHeight)
+	
+	; Move
+	TargetButton.Move(optionalX > 0 and 0 + (UI_Width / optionalX) or 0 + parentUI.MarginX, , )
+}
+
+MoveControl := (Target, position, size) => MoveMethod(Target, position, size)
+MoveMethod(Target, position, size) {
+	local parentUI := Target.Gui
+	
+	local X := 0, Y := 0, UI_Width := 0, UI_Height := 0
+	local UI_Margin_Width := UI_Width-parentUI.MarginX
+	
+	; Calculate initial control width based on GUI width and margins
+	X := 0, Y := 0, UI_Width := 0, UI_Height := 0
+	
+	; Get the client area dimensions
+	parentUI.GetPos(&X, &Y, &UI_Width, &UI_Height)
+	NewButtonWidth := (UI_Width - (2 * UI_Margin_Width))
+	
+	; Prevent negative button widths
+	if (NewButtonWidth < UI_Margin_Width/(size or 1)) {
+		NewButtonWidth := UI_Margin_Width/(size or 1)  ; Set to 0 if the width is negative
+	}
+	
+	OldButtonPosX := 0, OldY := 0, OldWidth := 0, OldHeight := 0
+	Target.GetPos(&OldButtonPosX, &OldY, &OldWidth, &OldHeight)
+	
+	; Resize
+	Target.Move(position > 0 and 0 + (UI_Width / position) or 0 + parentUI.MarginX, , position > 0 and 0 + (UI_Width / position) or 0 + parentUI.MarginX)
+}
+
+; ###############################
+; ########### Sounds ############
+; ###############################
 RunWarningSound(*)
 {
 
