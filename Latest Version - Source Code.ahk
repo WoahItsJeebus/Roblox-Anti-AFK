@@ -2,7 +2,7 @@
 #SingleInstance Force
 
 ; Variables
-global version := "1.2.0"
+global version := "1.3.0"
 
 global MinutesToWait := 15
 global SecondsToWait := MinutesToWait * 60
