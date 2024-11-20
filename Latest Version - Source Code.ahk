@@ -2,7 +2,7 @@
 #SingleInstance Force
 
 ; Variables
-global version := "1.3.0"
+global version := "1.3.1"
 
 global MinutesToWait := 15
 global SecondsToWait := MinutesToWait * 60
@@ -69,7 +69,7 @@ createWarningUI(*)
 {
 	; Global Variables
 	global blnLightMode := RegRead("HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize", "AppsUseLightTheme")
-	global MainUI_Warning := Gui("+AlwaysOnTop")
+	global MainUI_Warning := Gui("")
 	MainUI_Warning.BackColor := intWindowColor
 
 	; Local Variables
@@ -90,18 +90,22 @@ createWarningUI(*)
 	warning_Text_Header.SetFont("s24 w1000", "Consolas")
 	warning_Text_Header.Opt("Center cff4840")
 	
+    ; ##############################################
+    ; Body 1
 	local warning_Text_Body1 := MainUI_Warning.Add("Link", "h80 w315", 'This script is provided by')
 	warning_Text_Body1.SetFont("s12 w300", "Arial")
 	warning_Text_Body1.Opt("c" ControlTextColor)
 	
-	local JEEBUS_LINK1 := MainUI_Warning.Add("Link", "x+-140 h20 w295 c" linkColor, '<a href="https://www.roblox.com/users/3817884/profile">@WoahItsJeebus</a>')
+	local JEEBUS_LINK1 := MainUI_Warning.Add("Link", "x+-140 h20 w125 c" linkColor, '<a href="https://www.roblox.com/users/3817884/profile">@WoahItsJeebus</a>')
 	JEEBUS_LINK1.SetFont("s12 w300", "Arial")
 	LinkUseDefaultColor(JEEBUS_LINK1)
 
-	local warning_Text_Body1_5 := MainUI_Warning.Add("Link", "x+-170 h20 w295", 'and is intended solely for the purpose of')
+	local warning_Text_Body1_5 := MainUI_Warning.Add("Link", "x+0 h20 w300", 'and is intended solely for the purpose of')
 	warning_Text_Body1_5.SetFont("s12 w300", "Arial")
 	warning_Text_Body1_5.Opt("c" ControlTextColor)
 
+    ; ###############################################
+    ; Body 2
 	local warning_Text_Body2 := MainUI_Warning.Add("Link", "y+0 x" MainUI_Warning.MarginX . " h80 w" UI_Width_Warning/2-MainUI_Warning.MarginX*2, 'maintaining an active Roblox session while the user can do other tasks simultaneously. This is achieved by periodically activating the first found Roblox process window and clicking the center of the window.')
 	warning_Text_Body2.SetFont("s12 w300", "Arial")
 	warning_Text_Body2.Opt("c" ControlTextColor)
@@ -627,7 +631,7 @@ ToggleCore(optionalControl?, forceState?, *)
 	isActive := false
 	ResetCooldown()
 	
-	SetTimer(RunCore, 0)
+    Sleep 1000
 	return Roblox_Not_Found()
 }
 
