@@ -2,7 +2,7 @@
 #SingleInstance Force
 
 ; Variables
-global version := "1.3.1"
+global version := "1.3.2"
 
 global MinutesToWait := 15
 global SecondsToWait := MinutesToWait * 60
@@ -631,7 +631,7 @@ ToggleCore(optionalControl?, forceState?, *)
 	isActive := false
 	ResetCooldown()
 	
-    Sleep 1000
+	SetTimer(RunCore, 0)
 	return Roblox_Not_Found()
 }
 
