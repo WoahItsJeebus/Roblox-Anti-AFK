@@ -2,7 +2,7 @@
 #SingleInstance Force
 
 ; Variables
-global version := "1.3.2"
+global version := "1.4.0"
 
 global MinutesToWait := 15
 global SecondsToWait := MinutesToWait * 60
@@ -59,7 +59,7 @@ global linkColor := (!blnLightMode and updateTheme) and "99c3ff" or "4787e7"
 global currentTheme := blnLightMode
 global lastTheme := currentTheme
 
-
+global wasActiveWindow := false
 
 ; ================================================= ;
 clamp := (n, low, hi) => Min(Max(n, low), hi)
@@ -642,11 +642,18 @@ ReloadScript(*)
 
 getRobloxHWND(*)
 {	
+	local RobloxWindows := []
 	local windowsVersion_Roblox := WinExist("ahk_exe ApplicationFrameHost.exe") and WinGetTitle(WinExist("ahk_exe ApplicationFrameHost.exe")) = "Roblox" and WinExist("ahk_exe ApplicationFrameHost.exe")
-	; local windowsRobloxTitle := windowsVersion_Roblox and WinGetTitle(windowsVersion_Roblox)
+	local websiteVersion_Roblox := WinExist("ahk_exe RobloxPlayerBeta.exe") and WinExist("ahk_exe RobloxPlayerBeta.exe")
 	
-	local HWID := windowsVersion_Roblox or WinExist("ahk_exe RobloxPlayerBeta.exe") or False
-	return HWID
+	if not windowsVersion_Roblox and not websiteVersion_Roblox
+		return false
+	if websiteVersion_Roblox
+		RobloxWindows.Push(websiteVersion_Roblox)
+	if windowsVersion_Roblox
+		RobloxWindows.Push(windowsVersion_Roblox)
+
+	return RobloxWindows
 }
 
 RunCore(*)
@@ -670,6 +677,8 @@ RunCore(*)
 	global WaitProgress
 	global WaitTimerLabel
 	global CurrentElapsedTime
+
+	global wasActiveWindow
 
 	; Check for Roblox process
 	if not getRobloxHWND()
@@ -700,30 +709,13 @@ RunCore(*)
 		; Get old mouse pos
 		MouseGetPos &OldPosX, &OldPosY, &windowID
 		
-		; Local variables
-		local wasActiveWindow := False
 		local wasMinimized := False
 		
 		;---------------
 		; Find and activate Roblox window
-		local robloxProcessID := getRobloxHWND()
-		
-		if not WinActive(robloxProcessID)
-			WinActivate(robloxProcessID)
-		else
-			wasActiveWindow := True
-		
-		;---------------
-		
-		; Was Roblox the last focused window?
-		if not wasActiveWindow
-		{
-			WinGetPos &WindowX, &WindowY, &Width, &Height, WinGetTitle("A")
-			MouseMove Width/2, Height/2, 0
-		}
-		
-		; Click
-		Send "{Click 5}"
+		local robloxProcesses := getRobloxHWND()
+		for i,v in robloxProcesses
+			ClickRobloxWindows(v)
 		
 		; Activate previous application window & reposition mouse
 		WinActivate windowID
@@ -799,6 +791,31 @@ MoveMethod(Target, position, size) {
 	; Resize
 	Target.Move(position > 0 and 0 + (UI_Width / position) or 0 + parentUI.MarginX, , position > 0 and 0 + (UI_Width / position) or 0 + parentUI.MarginX)
 }
+
+; ###############################
+ClickRobloxWindows(process)
+{
+	global wasActiveWindow
+	if not WinActive(process)
+	{
+		wasActiveWindow := false
+		WinActivate(process)
+	}
+	else
+		wasActiveWindow := True
+	
+	;---------------
+	; Was Roblox the last focused window?
+	if not wasActiveWindow
+	{
+		WinGetPos &WindowX, &WindowY, &Width, &Height, WinGetTitle("A")
+		MouseMove Width/2, Height/2, 0
+	}
+	
+	; Click
+	Send "{Click 5}"
+}
+
 
 ; ###############################
 ; ########### Sounds ############
