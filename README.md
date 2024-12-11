@@ -24,5 +24,5 @@
 > As this is my very first real project in this language, bugs can occur at any point. Relaunching the script or using an earlier build may circumvent these bugs.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/c9791d5a-3d4b-4967-8ff5-236e4a45f6a6">
+  <img src="https://github.com/user-attachments/assets/283170fe-7cda-45f2-bbe1-f591987437e4">
 </p>
