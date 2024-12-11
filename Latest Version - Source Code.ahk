@@ -2,14 +2,14 @@
 #SingleInstance Force
 
 ; Variables
-global version := "1.4.0"
+global version := "1.5.0"
 
 global MinutesToWait := 15
 global SecondsToWait := MinutesToWait * 60
 global lastUpdateTime := A_TickCount
 global CurrentElapsedTime := 0
-global playSounds := True
-global isActive := False
+global playSounds := 1
+global isActive := 1
 global FirstRun := True
 global MainUI := ""
 
@@ -236,12 +236,13 @@ CreateGui(*)
 	; ########################
 	; 		  Buttons
 	; ########################
-	local activeText_Core := isActive and "Enabled" or "Disabled"
+	; local activeText_Core := isActive and "Enabled" or "Disabled"
+	activeText_Core := (isActive == 3 and "Enabled") or (isActive == 2 and "Waiting...") or "Disabled"
 	CoreToggleButton := MainUI.Add("Button", "h40 w" UI_Margin_Width/2, "Anti-AFK: " activeText_Core)
-	CoreToggleButton.OnEvent("Click", ToggleCore, not isActive)
+	CoreToggleButton.OnEvent("Click", ToggleCore)
 	CoreToggleButton.Opt("Background" intWindowColor)
 
-	local activeText_Sound := playSounds and "Unmuted" or activeText_Sound := "Muted"
+	local activeText_Sound := (playSounds == 1 and "All") or (playSounds == 2 and "Less") or (playSounds == 3 and "None")
 	
 	SoundToggleButton := MainUI.Add("Button", "x+m h40 w" UI_Margin_Width/2, "Sounds: " activeText_Sound)
 	SoundToggleButton.OnEvent("Click", ToggleSound)
@@ -377,7 +378,7 @@ CreateGui(*)
 	CreateExtrasGUI()
 
 	; Indicate UI was fully created
-	if playSounds
+	if playSounds == 1
 		Loop 2
 			SoundBeep(300, 200)
 	
@@ -544,7 +545,7 @@ UpdateTimerLabel(*)
 	global MinutesToWait
 	global ElapsedTimeLabel
 	global CurrentElapsedTime
-	global lastUpdateTime := isActive and lastUpdateTime or A_TickCount
+	global lastUpdateTime := isActive > 1 and lastUpdateTime or A_TickCount
 
 	; Calculate and update progress bar
     secondsPassed := (A_TickCount - lastUpdateTime) / 1000  ; Convert ms to seconds
@@ -589,23 +590,53 @@ Roblox_Not_Found(*)
 
 ResetCooldown(*)
 {
-	global isActive
 	global CoreToggleButton
 	global ElapsedTimeLabel
 	global WaitProgress
 	global WaitTimerLabel
 	global lastUpdateTime := A_TickCount
-
-	; Setup Core Toggle Button
-	activeText_Core := (isActive and "Enabled") or "Disabled"
+	
+	activeText_Core := (isActive == 3 and "Enabled") or (isActive == 2 and "Waiting...") or "Disabled"
 	CoreToggleButton.Text := "Anti-AFK: " activeText_Core
 	CoreToggleButton.Redraw()
-	
+
+	if isActive == 2 and getRobloxHWND()
+		ToggleCore(,3)
+	else if isActive == 3 and not getRobloxHWND()
+		ToggleCore(,2)
+
 	; Reset cooldown progress bar
 	UpdateTimerLabel()
 	WaitProgress.Value := 0
     WaitTimerLabel.Text := Round(WaitProgress.Value, 0) "%"
 }
+
+isWaitingForRoblox(*)
+{
+	global isActive
+	
+	if isActive == 2 and not getRobloxHWND()
+		return true
+
+	return false
+}
+
+switchActiveState(*)
+{
+	global isActive
+	; local toggleWithWindowExisting := (getRobloxHWND() and isActive == 1 and 3) or (getRobloxHWND() and isActive == 3 and 1) or 0
+	; local toggleWaiting := (isActive == 1 and not getRobloxHWND() and 2) or (isActive == 2 and not getRobloxHWND() and 1) or isFullActive() == 2 and 2 or 0
+
+	; if toggleWithWindowExisting and toggleWithWindowExisting == 3
+	; 	isActive := 3
+	; else if toggleWaiting and toggleWaiting == 2
+	; 	isActive := 2
+	; else isActive := 1
+	isActive := isActive < 3 and isActive + 1 or 1
+	if isActive == 3 and not getRobloxHWND()
+		isActive := 1
+	return isActive
+}	
 
 ToggleCore(optionalControl?, forceState?, *)
 {
@@ -613,26 +644,32 @@ ToggleCore(optionalControl?, forceState?, *)
 	global isActive
 	global FirstRun
 
-	isActive := forceState or not isActive
 	
+	isActive := forceState or switchActiveState()
+	; isActive := forceState or (getRobloxHWND() and isActive == 1 and 3) or (getRobloxHWND() and isActive == 3 and 1) or (isActive == 1 and not getRobloxHWND() and 2) or (isActive == 2 and not getRobloxHWND() and 1) or isFullActive() == 2 and 2
+	global CoreToggleButton
+
+	activeText_Core := (isActive == 3 and "Enabled") or (isActive == 2 and "Waiting...") or "Disabled"
+	CoreToggleButton.Text := "Anti-AFK: " activeText_Core
+	CoreToggleButton.Redraw()
+
 	; Reset cooldown
 	ResetCooldown()
 	
 	UpdateTimerLabel()
 	; Toggle Timer
-	if isActive and getRobloxHWND()
+	if isActive > 1
 	{
 		FirstRun := True
 		return SetTimer(RunCore, 100)
 	}
-	else if not isActive and getRobloxHWND()
+	else if isActive == 1
 		return SetTimer(RunCore, 0)
 
-	isActive := false
+	; isActive := 1
 	ResetCooldown()
-	
 	SetTimer(RunCore, 0)
-	return Roblox_Not_Found()
+	return
 }
 
 ReloadScript(*)
@@ -682,10 +719,11 @@ RunCore(*)
 
 	; Check for Roblox process
 	if not getRobloxHWND()
-	return ToggleCore(, false)
+		ResetCooldown()
+	; 	ToggleCore(, 2)
 	
 	; Check if the toggle has been switched off
-	if not isActive
+	if isActive == 1
 		return
 	
 	if (FirstRun or WaitProgress.Value >= 100) and getRobloxHWND()
@@ -695,16 +733,16 @@ RunCore(*)
 			FirstRun := False
 		
 		ResetCooldown()
-
-		if playSounds
+		
+		if playSounds == 1
 			RunWarningSound()
 		
-		if not isActive
+		if isActive == 1
 			return
 		
 		; Indicate target found with audible beep
-		if playSounds
-		SoundBeep(2000, 70)
+		if playSounds == 2
+			SoundBeep(2000, 70)
 		
 		; Get old mouse pos
 		MouseGetPos &OldPosX, &OldPosY, &windowID
@@ -712,15 +750,24 @@ RunCore(*)
 		local wasMinimized := False
 		
 		;---------------
-		; Find and activate Roblox window
+		; Find and activate Roblox processes
 		local robloxProcesses := getRobloxHWND()
-		for i,v in robloxProcesses
-			ClickRobloxWindows(v)
+		
+		if robloxProcesses.Length > 1
+		{
+			for i,v in robloxProcesses
+			{
+				ClickRobloxWindows(v)
+			}
+		}
+		else
+			ClickRobloxWindows(robloxProcesses[1])
+		
 		
 		; Activate previous application window & reposition mouse
-		WinActivate windowID
 		if not wasActiveWindow
 		{
+			WinActivate windowID
 			MouseMove OldPosX, OldPosY, 0
 		}
 		
@@ -795,14 +842,9 @@ MoveMethod(Target, position, size) {
 ; ###############################
 ClickRobloxWindows(process)
 {
-	global wasActiveWindow
-	if not WinActive(process)
-	{
-		wasActiveWindow := false
+	global wasActiveWindow := WinActive(process) and true or false
+	if not wasActiveWindow
 		WinActivate(process)
-	}
-	else
-		wasActiveWindow := True
 	
 	;---------------
 	; Was Roblox the last focused window?
@@ -825,10 +867,10 @@ RunWarningSound(*)
 
 	Loop 3
 		{
-			if not isActive
+			if isActive == 1
 			break
 
-			if playSounds
+			if playSounds == 1
 				SoundBeep(1000, 80)
 			else
 				break
@@ -841,9 +883,9 @@ ToggleSound(*)
 {
 	global playSounds
 	global SoundToggleButton
-	playSounds := not playSounds
+	playSounds := playSounds < 3 and playSounds + 1 or 1
 	
-	local activeText_Sound := (playSounds and "Unmuted") or "Muted"
+	local activeText_Sound := (playSounds == 1 and "All") or (playSounds == 2 and "Less") or (playSounds == 3 and "None")
 	
 	; Setup Sound Toggle Button
 	if SoundToggleButton
