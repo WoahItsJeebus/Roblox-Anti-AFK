@@ -1,6 +1,10 @@
 #Requires AutoHotkey >=2.0
 #SingleInstance Force
 
+global version := "1.7.0"
+global debugPrint := false
+AIAutoUpdate()
+
 ; #######################
 
 ; Variables
@@ -28,11 +32,6 @@ createDefaultSettings(*)
 	SettingsExists := IniRead("Settings.ini", "System", "Exists", false)
 	RequiredExists := IniRead("Required.ini", "System", "Exists", false)
 }
-
-
-
-global version := "1.7.0"
-AIAutoUpdate()
 
 global MinutesToWait := 15
 global SecondsToWait := MinutesToWait * 60
@@ -91,7 +90,8 @@ global wasActiveWindow := false
 
 global ControlResize := (Target, position, size) => ResizeMethod(Target, position, size)
 global MoveControl := (Target, position, size) => MoveMethod(Target, position, size)
-global AcceptedWarning := IniRead("Required.ini", "Warning", "AcceptedWarning", createWarningUI())
+global AcceptedWarning := IniRead("Required.ini", "Warning", "AcceptedWarning", false) and CreateGui() or createWarningUI()
+WinActivate(MainUI)
 
 ; ================================================= ;
 global clamp := (n, low, hi) => Min(Max(n, low), hi)
@@ -119,8 +119,7 @@ IsVersionNewer(localVersion, onlineVersion) {
 }
 
 AIAutoUpdate(*) {
-	
-
+	global debugPrint
 
     URL_SCRIPT := "https://github.com/WoahItsJeebus/Roblox-Anti-AFK/releases/download/Latest/Roblox.Anti-AFK.ahk"
     tempFile := A_Temp "\temp_script.ahk"
@@ -139,7 +138,8 @@ AIAutoUpdate(*) {
     try {
         Download(URL_SCRIPT, tempFile)
     } catch {
-        MsgBox("Failed to download update file.", "Error", "IconX 4096 T5")
+        if debugPrint
+			MsgBox("Failed to download update file.", "Error", "IconX 4096 T5")
         progressGui.Destroy()
         return
     }
@@ -153,7 +153,8 @@ AIAutoUpdate(*) {
         else
             throw Error("Version not found in script")
     } catch {
-        MsgBox("Failed to read version information from the update file.", "Error", "IconX 4096 T5")
+        if debugPrint
+			MsgBox("Failed to read version information from the update file.", "Error", "IconX 4096 T5")
         FileDelete tempFile
         progressGui.Destroy()
         return
@@ -170,19 +171,27 @@ AIAutoUpdate(*) {
             progressGui.Destroy()
             Reload
         } catch {
-            MsgBox("Failed to update the script file.", "Error", "IconX 4096 T3")
+            if debugPrint
+				MsgBox("Failed to update the script file.", "Error", "IconX 4096 T3")
             progressGui.Destroy()
             return
         }
     } else if IsVersionNewer(version, onlineVersion) == "Updated" {
-        MsgBox("Script version " . version . " is up-to-date.", "Notice", "Iconi 4096 T2")
+        if debugPrint
+			MsgBox("Script version " . version . " is up-to-date.", "Notice", "Iconi 4096 T2")
+		
+	statusText.Text := "Script is up-to-date! Happy farming!"
         FileDelete tempFile
 	} else {
-        MsgBox("Local version " . version . " is assumed to be a Beta test or edited version. Update skipped.", "Notice", "Iconi 4096 T5")
-        FileDelete tempFile
+        if debugPrint
+			MsgBox("Local version " . version . " is assumed to be a Beta test or edited version. Update skipped.", "Notice", "Iconi 4096 T5")
+        
+		statusText.Text := "Version assumed to be beta or edited. Continuing without updating..."
+		FileDelete tempFile
     }
 
-	Sleep(1500)
+	progressBar.Value := 100
+	Sleep(2250)
 
     ; Step 3: Close the Progress GUI
     progressGui.Destroy()
