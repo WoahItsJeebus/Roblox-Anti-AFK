@@ -1,5 +1,6 @@
 > [!IMPORTANT]
 > # This script **<ins>requires</ins>** [AutoHotKey v2](https://autohotkey.com/download/ahk-v2.exe)
+> Due to the way I have this setup currently, it is highly recommended to keep this script in its own dedicated folder. It generates two files that are generically named and are required to save/load your settings data to and from!
 # <p align=center><ins>**Features**</ins></p>
 - ### Anti-AFK
   - This script will look for an active Roblox process, focus it, clicks the center of the window, and returns to the previously active window (if any), repeats every 15 minutes
@@ -16,7 +17,8 @@
 # <p align=center><ins>**Download**</ins></p>
 <div align="center">
   
-[![GitHub Release](https://img.shields.io/github/v/release/WoahItsJeebus/Roblox-Anti-AFK?sort=semver&display_name=release&style=for-the-badge&label=Latest)](https://github.com/WoahItsJeebus/Roblox-Anti-AFK/releases/latest)
+[![GitHub Release](https://img.shields.io/github/v/release/WoahItsJeebus/Roblox-Anti-AFK?sort=semver&display_name=release&style=for-the-badge&label=Latest)](https://github.com/WoahItsJeebus/Roblox-Anti-AFK/releases/tag/Latest/Roblox.Anti-AFK.ahk)
+
 </div>
 
 > [!CAUTION]
