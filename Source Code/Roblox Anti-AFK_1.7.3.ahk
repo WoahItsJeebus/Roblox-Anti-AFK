@@ -1,7 +1,7 @@
 #Requires AutoHotkey >=2.0
 #SingleInstance Force
 
-global version := "1.7.3"
+global version := "1.7.2"
 global debugPrint := false
 GetUpdate(true)
 
