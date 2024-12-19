@@ -17,7 +17,7 @@
 # <p align=center><ins>**Download**</ins></p>
 <div align="center">
   
-[![GitHub Release](https://img.shields.io/github/v/release/WoahItsJeebus/Roblox-Anti-AFK?sort=semver&display_name=release&style=for-the-badge&label=Latest)](https://github.com/WoahItsJeebus/Roblox-Anti-AFK/releases/download/1.7.0/Roblox.Anti-AFK.Script.By.Jeebus.zip)
+[![GitHub Release](https://img.shields.io/github/v/release/WoahItsJeebus/Roblox-Anti-AFK?sort=semver&display_name=release&style=for-the-badge&label=Latest)](https://github.com/WoahItsJeebus/Roblox-Anti-AFK/releases/download/Latest/Roblox.Anti-AFK.Script.By.Jeebus.zip)
 
 </div>
 
