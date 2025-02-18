@@ -14,18 +14,17 @@
 > [!NOTE]
 > This script is the first *real* project I've put together since learning a small bit of AHK in my offtime. As a result, a lot of what you'll find may be unoptimized or sloppy.
 
-# <p align=center><ins>**Download**</ins></p>
-<div align="center">
-  
-[![GitHub Release](https://img.shields.io/github/v/release/WoahItsJeebus/Roblox-Anti-AFK?sort=semver&display_name=release&style=for-the-badge&label=Latest)](https://github.com/WoahItsJeebus/Roblox-Anti-AFK/releases/latest/download/Roblox.Anti-AFK.ahk)
-
-</div>
-
+<!-- ################## -->
+#
 > [!CAUTION]
 > Bugs may occur when searching for the Windows Store version of Roblox.
 > As this is my very first real project in this language, bugs can occur at any point. Relaunching the script or using an earlier build may circumvent these bugs.
 
+<p align="center"><a href="https://github.com/WoahItsJeebus/Roblox-Anti-AFK/releases/latest/download/Roblox.Anti-AFK.ahk">
+  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/WoahItsJeebus/Roblox-Anti-AFK?sort=semver&display_name=tag&style=flat&label=Download" height="60" width="340">
+</a></p>
+
+#
 <p align="center">
   <img src="https://github.com/user-attachments/assets/99a93d12-c121-42e7-8e43-23ab3461cea2">
-
 </p>
