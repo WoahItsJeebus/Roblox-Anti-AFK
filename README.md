@@ -21,7 +21,7 @@
 > As this is my very first real project in this language, bugs can occur at any point. Relaunching the script or using an earlier build may circumvent these bugs.
 
 <p align="center"><a href="https://github.com/WoahItsJeebus/Roblox-Anti-AFK/releases/latest/download/Roblox.Anti-AFK.ahk">
-  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/WoahItsJeebus/Roblox-Anti-AFK?sort=semver&display_name=tag&style=flat&label=Download" height="60" width="340">
+  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/WoahItsJeebus/Roblox-Anti-AFK?sort=semver&display_name=tag&style=plastic&label=Download%20Latest" height="40" width="340">
 </a></p>
 
 #
