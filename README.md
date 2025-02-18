@@ -24,7 +24,8 @@
   <img alt="GitHub Release" src="https://img.shields.io/github/v/release/WoahItsJeebus/Roblox-Anti-AFK?sort=semver&display_name=tag&style=plastic&label=Download%20Latest" height="40" width="340">
 </a></p>
 
-#
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/99a93d12-c121-42e7-8e43-23ab3461cea2">
-</p>
+<details><summary>Screenshot(s)</summary>
+  <p align="center">
+    <img src="https://github.com/user-attachments/assets/99a93d12-c121-42e7-8e43-23ab3461cea2">
+  </p>
+</details>
