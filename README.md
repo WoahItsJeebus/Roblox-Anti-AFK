@@ -26,6 +26,6 @@
 
 <details><summary>Screenshot(s)</summary>
   <p align="center">
-    <img src="https://github.com/user-attachments/assets/99a93d12-c121-42e7-8e43-23ab3461cea2">
+    <img src="https://github.com/user-attachments/assets/a371f014-856a-4882-81da-074cb1644bc6">
   </p>
 </details>
