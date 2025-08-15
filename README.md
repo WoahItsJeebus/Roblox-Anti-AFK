@@ -1,3 +1,6 @@
+> [!TIP]
+> # <mark>I've uploaded V2 of this script to a separate repository. You can find it [here](https://github.com/WoahItsJeebus/JACS)! It has a cleaner UI, more features, and is overall better performing than this script.</mark>
+#
 > [!IMPORTANT]
 > # This script **<ins>requires</ins>** [AutoHotKey v2](https://autohotkey.com/download/ahk-v2.exe)
 > Due to the way I have this setup currently, it is highly recommended to keep this script in its own dedicated folder. It generates two files that are generically named and are required to save/load your settings data to and from!
